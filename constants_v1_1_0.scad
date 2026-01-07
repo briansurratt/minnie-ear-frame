@@ -1,6 +1,7 @@
 version = "v1.1.0";
 bowRadius = 70;
 bowThickness = 3;
+wallThickness = 3;
 bowHeight = 50;
 bowLip = 5;
 bowLipHeight = 5;

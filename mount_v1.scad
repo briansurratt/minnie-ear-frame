@@ -18,21 +18,29 @@ earCenterY = sin(earAngle) * earCenterRadius;
 bow();
 
 difference() {
-    linear_extrude(height=10) {
+    linear_extrude(height=bodyHeight) {
 
-        circle(d=headDiameter);
+        hollowRing(headDiameter);
+        
 
         translate([-earCenterX, earCenterY, 0]) {
-            circle(d=earDiameter);
+            hollowRing(earDiameter);
         }
 
         translate([earCenterX, earCenterY, 0]) {
-            circle(d=earDiameter);
+            hollowRing(earDiameter);
         }
         
 
     }
     version_text();
+}
+
+module hollowRing(diam= 10) {
+        difference() {
+            circle(d=diam);
+            circle(d=diam-(wallThickness * 2));
+        }
 }
 
 
