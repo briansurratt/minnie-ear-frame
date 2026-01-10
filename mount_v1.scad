@@ -1,7 +1,7 @@
 $fn = $preview ? 32 : 128;
 
 
-include <constants_v1_1_0.scad>
+include <constants_v1_1_1.scad>
 
 // #translate([-90.5, -121, 0]) {
 //     import("reference/Mickey_Mouse_head_and_ears.svg");    
@@ -15,26 +15,105 @@ earCenterX = cos(earAngle) * earCenterRadius;
 earCenterY = sin(earAngle) * earCenterRadius;
 
 
-bow();
+module back() {
 
-difference() {
-    linear_extrude(height=bodyHeight) {
+    bow();
+    hanger();
 
-        hollowRing(headDiameter);
-        
+    difference() {
+        linear_extrude(height=bodyHeight) {
 
-        translate([-earCenterX, earCenterY, 0]) {
-            hollowRing(earDiameter);
+            hollowRing(headDiameter);
+            
+
+            translate([-earCenterX, earCenterY, 0]) {
+                hollowRing(earDiameter);
+            }
+
+            translate([earCenterX, earCenterY, 0]) {
+                hollowRing(earDiameter);
+            }
+            
+
+        }
+        version_text();
+    }
+
+
+
+}
+
+module hanger() {
+
+    translate([0, bowShiftY,0])
+
+    difference() {
+
+        linear_extrude(wallThickness) {
+            hull() {
+                arc(bowRadius + 2, [80,100], 1, $fn);
+                translate([0,bowRadius + 10,0])
+                circle(d=10);
+            }
         }
 
-        translate([earCenterX, earCenterY, 0]) {
-            hollowRing(earDiameter);
-        }
-        
+        // nail hole
+        translate([0, bowRadius + 10, wallThickness/2 ])
+        cylinder(d=3, h=wallThickness + 2, center=true);
 
     }
-    version_text();
+
 }
+
+render_back = false;
+
+if (render_back) {
+    back();
+} else  {
+    frame();
+}
+
+
+
+module frame() {
+
+    frameAllowance = 1;
+    frameHeight = 10;
+
+    earOuterDiameter = earDiameter + (wallThickness * 2) + frameAllowance;
+    headOuterDiameter = headDiameter + (wallThickness * 2) + frameAllowance;
+
+    difference() {
+
+        // rings
+        linear_extrude(height=frameHeight) {
+            translate([earCenterX, earCenterY, 0]) circle(d=earOuterDiameter);
+            translate([-earCenterX, earCenterY, 0]) circle(d=earOuterDiameter);
+            circle(d=headOuterDiameter);
+        }
+
+        // negatives
+        translate([0, 0, 2])    
+        linear_extrude(height=frameHeight) {
+        
+        translate([earCenterX, earCenterY, 0]) circle(d=earOuterDiameter - (wallThickness * 2));
+        translate([-earCenterX, earCenterY, 0]) circle(d=earOuterDiameter - (wallThickness * 2));
+        circle(d=headOuterDiameter - (wallThickness * 2));    
+        }
+
+        // frame cutout
+        cylinder(d=headOuterDiameter - 15, h=10, center=true);
+
+        // bow cutout for ears
+        translate([0,bowShiftY,-1])
+        linear_extrude(height=frameHeight + 2) {
+            arc(bowRadius - 0.25, bowAngles, bowShiftY + 1, $fn);
+        }
+
+    }
+
+}
+
 
 module hollowRing(diam= 10) {
         difference() {
@@ -48,7 +127,7 @@ module hollowRing(diam= 10) {
 
 module bow() {
 
-    translate([0,0,bowHeight])
+    translate([0,bowShiftY,bowHeight])
     mirror([0,0,1]) {
 
     linear_extrude(height=bowHeight)
