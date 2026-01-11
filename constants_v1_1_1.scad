@@ -1,4 +1,4 @@
-version = "v1.1.0";
+version = "v1.1.1";
 bowRadius = 62;
 bowThickness = 3;
 
