@@ -1,4 +1,4 @@
-$fn = $preview ? 32 : 128;
+$fn = $preview ? 32 : 512;
 
 
 include <constants_v1_2_0.scad>
@@ -9,7 +9,10 @@ MODE_BACK = "back";
 MODE_FRAME = "frame";
 MODE_TEMPLATE = "template";
 
-mode = MODE_TEMPLATE;
+FRAME_FEATURES_ON = false;
+OPEN_SILHOUETTE = false;
+
+mode = MODE_BACK;
 
 if (mode == MODE_BACK) {
     back();
@@ -52,19 +55,22 @@ module back() {
 
 module detents(male=true) {
 
-    positions = [
-        [headDiameter/2,0,0, 0],
-        [-headDiameter/2,0, 0, 0],
-        [0, headDiameter/2, 0, 90],
-        [0, -headDiameter/2, 0, 90]
-    ];
+    if (FRAME_FEATURES_ON) {
 
-    for (pos = positions) {
-        translate([pos[0], pos[1], pos[2]])
-        rotate([0,0,pos[3]])
-            detent(male);
+        positions = [
+            [headDiameter/2,0,0, 0],
+            [-headDiameter/2,0, 0, 0],
+            [0, headDiameter/2, 0, 90],
+            [0, -headDiameter/2, 0, 90]
+        ];
+
+        for (pos = positions) {
+            translate([pos[0], pos[1], pos[2]])
+            rotate([0,0,pos[3]])
+                detent(male);
+        }
+
     }
-
     
 }
 
@@ -142,10 +148,14 @@ module frame() {
 
 
 module hollowRing(diam= 10) {
-        difference() {
-            circle(d=diam);
+
+    difference() {
+        circle(d=diam);
+        if (OPEN_SILHOUETTE) {
             circle(d=diam-(wallThickness * 2));
         }
+    }
+
 }
 
 
@@ -214,10 +224,14 @@ module arc(radius, angles, width = 1, fn = 24) {
 
 module headInternals() {
 
+    if (FRAME_FEATURES_ON) {
+
     linear_extrude(height=bodyHeight) {
 
     square([wallThickness, headDiameter - 1], center=true);
     square([headDiameter - 1, wallThickness], center=true);
+
+    }
 
     }
 
