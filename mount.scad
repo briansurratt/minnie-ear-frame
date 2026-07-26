@@ -1,61 +1,60 @@
 $fn = $preview ? 32 : 512;
 
 
-include <constants_v1_2_0.scad>
-
-
+include <constants.scad>
 
 MODE_BACK = "back";
 MODE_FRAME = "frame";
 MODE_TEMPLATE = "template";
 
-FRAME_FEATURES_ON = false;
-OPEN_SILHOUETTE = false;
+mode = MODE_FRAME;
 
-mode = MODE_BACK;
+gen_params = frame_params;
+
+echo(str("mode = ", mode));
+echo(str("parameters = ", gen_params));
 
 if (mode == MODE_BACK) {
-    back();
+    back(gen_params);
 } else if (mode == MODE_FRAME) {
-    frame();
+    frame(gen_params);
 } else if (mode == MODE_TEMPLATE) {
     template();
 }
 
+module back(gen_params) {
 
-module back() {
-
-    headInternals();
+    headInternals(gen_params);
     bow();
     hanger();
 
     difference() {
         linear_extrude(height=bodyHeight) {
 
-            hollowRing(headDiameter);
+            hollowRing(headDiameter,gen_params);
             
 
             translate([-earCenterX, earCenterY, 0]) {
-                hollowRing(earDiameter);
+                hollowRing(earDiameter,gen_params);
             }
 
             translate([earCenterX, earCenterY, 0]) {
-                hollowRing(earDiameter);
+                hollowRing(earDiameter,gen_params);
             }
             
 
         }
         // version_text();
         translate([0,0,bodyHeight- detentZOffset])
-        detents(false);
+        detents(false,gen_params);
     }
 
 }
 
 
-module detents(male=true) {
+module detents(male=true,gen_params) {
 
-    if (FRAME_FEATURES_ON) {
+    if (gen_params.frame) {
 
         positions = [
             [headDiameter/2,0,0, 0],
@@ -147,11 +146,11 @@ module frame() {
 }
 
 
-module hollowRing(diam= 10) {
+module hollowRing(diam= 10, gen_params) {
 
     difference() {
         circle(d=diam);
-        if (OPEN_SILHOUETTE) {
+        if (!gen_params.filled) {
             circle(d=diam-(wallThickness * 2));
         }
     }
@@ -163,29 +162,27 @@ module hollowRing(diam= 10) {
 
 module bow() {
 
-    translate([0,bowShiftY,bowHeight])
-    mirror([0,0,1]) {
+        translate([0,bowShiftY,bowHeight])
+        mirror([0,0,1]) {
 
-    linear_extrude(height=bowHeight)
-    arc(bowRadius, bowAngles, bowThickness, $fn);
+        linear_extrude(height=bowHeight)
+        arc(bowRadius, bowAngles, bowThickness, $fn);
 
-    difference() {
+        difference() {
 
-        linear_extrude(height=bowLipHeight)
-        arc(bowRadius, bowAngles, bowThickness + bowLip, $fn);
+            linear_extrude(height=bowLipHeight)
+            arc(bowRadius, bowAngles, bowThickness + bowLip, $fn);
 
-rotate([0, 0,bowTheta]) {
-    translate([0, 0, bowLip + 1])
-    rotate_extrude(angle = 180-2*bowTheta, convexity = 2) {
-        translate([bowRadius + bowLip + bowThickness, 0, 0])
-        circle(r=bowLip);
+            rotate([0, 0,bowTheta]) {
+                translate([0, 0, bowLip + 1])
+                rotate_extrude(angle = 180-2*bowTheta, convexity = 2) {
+                    translate([bowRadius + bowLip + bowThickness, 0, 0])
+                    circle(r=bowLip);
+                }
+            }
+
+        }
     }
-}
-
-
-
-    }
-}
 }
 
 module version_text() {
@@ -222,16 +219,16 @@ module arc(radius, angles, width = 1, fn = 24) {
     }
 } 
 
-module headInternals() {
+module headInternals(gen_params) {
 
-    if (FRAME_FEATURES_ON) {
+    if (gen_params.frame) {
 
-    linear_extrude(height=bodyHeight) {
+        linear_extrude(height=bodyHeight) {
 
-    square([wallThickness, headDiameter - 1], center=true);
-    square([headDiameter - 1, wallThickness], center=true);
+        square([wallThickness, headDiameter - 1], center=true);
+        square([headDiameter - 1, wallThickness], center=true);
 
-    }
+        }
 
     }
 

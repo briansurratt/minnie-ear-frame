@@ -2,6 +2,11 @@ version = "v1.2.0";
 bowRadius = 62;
 bowThickness = 3;
 
+type = "STAND";
+
+frame_params = object (frame = true, filled = false);
+solid_params = object (frame = false, filled = true);
+open_params = object (frame = false, filled = false);
 
 bowHeight = 50;
 bowLip = 5;
