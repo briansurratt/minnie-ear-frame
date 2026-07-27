@@ -34,8 +34,7 @@ module base(gen_params) {
             roundover_disc(stand_parameters.leg_width *2, base_z, lip_radius);
         }
 
-
-        translate([0, 0, stand_parameters.step_height + 1]) 
+        translate([0, 0, stand_parameters.step_height * 1.5]) 
         #cube([
             stand_parameters.leg_width + interface_margin,
             stand_parameters.leg_thickness + interface_margin,
@@ -45,7 +44,7 @@ module base(gen_params) {
         );
 
         mirror([1,0,0])
-        translate([20, 0, -1.5]) {
+        translate([-12, -4.5, -1.5]) {
             import("signature.stl", convexity=3);
         }
     
