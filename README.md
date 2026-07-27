@@ -1,6 +1,9 @@
 # Minnie Ear Frame
 
-OpenSCAD project to create a wall mountable display for Minnie Mouse ear hand bands
+OpenSCAD project to create a wall mountable display for Minnie Mouse ear hand bands via OpenSCAD.  Also generates a freestanding version.
+
+![Ears on wall](images/ears_on_wall.jpg)
+![Ears on stand](images/ears_on_stand.jpg)
 
 ## Versioning Policy
 
