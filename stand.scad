@@ -1,7 +1,9 @@
 include <constants.scad>
 use <components.scad>
 
-stand(stand_params);
+// stand(stand_params);
+base(stand_params);
+
 
 module stand(gen_params) {
 
@@ -17,3 +19,36 @@ module stand(gen_params) {
 
 }
 
+module base(gen_params) {
+    lip_radius = 1;
+    interface_margin = 0.5;
+
+    base_dia = stand_parameters.base_diameter;
+    base_z = stand_parameters.step_height;
+
+    difference()  {
+
+        union() {
+            roundover_disc(base_dia, base_z, lip_radius);
+            translate([0, 0, base_z]) 
+            roundover_disc(stand_parameters.leg_width *2, base_z, lip_radius);
+        }
+
+
+        translate([0, 0, stand_parameters.step_height + 1]) 
+        #cube([
+            stand_parameters.leg_width + interface_margin,
+            stand_parameters.leg_thickness + interface_margin,
+            (stand_parameters.step_height * 2) 
+            ],
+            center = true
+        );
+
+        mirror([1,0,0])
+        translate([20, 0, -1.5]) {
+            import("signature.stl", convexity=3);
+        }
+    
+    }
+
+}

@@ -11,6 +11,7 @@ bodyHeight = 25;
 stand_parameters = object (
     leg_length= 50, 
     leg_width = 25,
+    leg_thickness = bodyHeight,
     base_diameter = 125, 
     step_height = 10);
 

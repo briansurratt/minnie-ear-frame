@@ -119,3 +119,15 @@ module bow_lip() {
 
     }
 }
+
+module roundover_disc (disc_od = 50, disc_height = 10, roundover_radius=1) {
+                // outer ring
+            cylinder(d=disc_od + 2 * roundover_radius, h=disc_height-roundover_radius, center=false);
+            // inner ring
+            cylinder(d=disc_od, h=disc_height, center=false);
+
+            translate([0, 0, disc_height-roundover_radius])
+            rotate_extrude()
+            translate([disc_od/2 , 0, 0])
+            circle(r=roundover_radius);
+}

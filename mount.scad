@@ -146,20 +146,12 @@ module frame() {
 
 // }
 
-
-
-
 module version_text() {
     translate([0, 0, -0.5])
     linear_extrude(height=1)
     mirror([1, 0, 0]) 
     #text(version, size=5, halign="center", valign="center");
 }
-
-
-
-
-
 
 module headInternals(gen_params) {
 
